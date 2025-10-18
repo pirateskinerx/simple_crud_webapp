@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 let cached = global.mongooseCache || (global.mongooseCache = { conn: null, promise: null });
 
-export default async function connectToDatabase() {
+export default async function mongodb() {
   const MONGO_URL = process.env.MONGO_URL || process.env.MONGODB_URI;
   if (!MONGO_URL) {
     throw new Error("Missing MONGO_URL / MONGODB_URI environment variable.");
