@@ -3,14 +3,33 @@ import Todo from "@/models/todoModel.js";
 
 export async function PUT(request) {
   try {
-    const body = await request.json();
-    const { id, title, description } = body || {};
+    // parse body if present
+    let body = null;
+    try {
+      body = await request.json();
+    } catch (_) {
+      body = null;
+    }
+
+    // get id from body OR from path (support /api/edittodo/<id>)
+    let id = body?.id;
+    if (!id) {
+      const url = new URL(request.url);
+      const parts = url.pathname.split("/").filter(Boolean);
+      const last = parts[parts.length - 1];
+      if (last && last.toLowerCase() !== "edittodo" && last.toLowerCase() !== "api") {
+        id = last;
+      }
+    }
+
     if (!id) {
       return new Response(JSON.stringify({ error: "id is required" }), {
         status: 400,
         headers: { "Content-Type": "application/json" },
       });
     }
+
+    const { title, description } = body || {};
     if (!title && description === undefined) {
       return new Response(JSON.stringify({ error: "nothing to update" }), {
         status: 400,
