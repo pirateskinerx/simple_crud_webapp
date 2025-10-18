@@ -1,10 +1,10 @@
-const { Schema, models, model } = require("mongoose");
+import mongoose from "mongoose";
 
-const todoModel = new Schema({
-  title: String,
+const TodoSchema = new mongoose.Schema({
+  title: { type: String, required: true },
   description: String,
+  createdAt: { type: Date, default: Date.now },
 });
 
-const ToDo = models.ToDo || model("ToDo", todoModel);
-
-export default ToDo;
+// Prevent model overwrite in serverless (Next/Vercel)
+export default mongoose.models.Todo || mongoose.model("Todo", TodoSchema);

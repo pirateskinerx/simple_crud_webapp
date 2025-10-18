@@ -1,17 +1,28 @@
-import mongodb from "@/database";
-import ToDo from "@/models/todoModel";
+import mongodb from "@/database/index.js";
+import Todo from "@/models/todoModel.js";
 
-export async function POST(req) {
+export async function POST(request) {
   try {
-    const { title, description } = await req.json();
-    await mongodb();
+    const body = await request.json();
+    const { title, description } = body || {};
+    if (!title) {
+      return new Response(JSON.stringify({ error: "title is required" }), {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
 
-    const todo = await ToDo.create({
-      title,
-      description,
+    await mongodb();
+    const todo = await Todo.create({ title, description });
+    return new Response(JSON.stringify(todo), {
+      status: 201,
+      headers: { "Content-Type": "application/json" },
     });
-    return new Response(JSON.stringify(todo));
-  } catch (error) {
-    console.log(error);
+  } catch (err) {
+    console.error("POST /api/addtodo error:", err);
+    return new Response(JSON.stringify({ error: "Server error" }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
   }
 }
