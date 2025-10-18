@@ -12,7 +12,7 @@ const AddToDo = () => {
     try {
       const response = await fetch("/api/addtodo", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Types": "application/json" },
         body: JSON.stringify({
           title,
           description,
@@ -32,19 +32,30 @@ const AddToDo = () => {
   return (
     <div>
       <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          placeholder="title..."
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-        />
-        <input
-          type="text"
-          placeholder="description..."
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-        />
-        <button type="submit">add todo</button>
+        <div className="grid p-30 pb-0 font-mono justify-center gap-7">
+          <div className="flex gap-5">
+            <input
+              className="border-gray-600 border-t-0 border-r-0 border-l-0 p-1 border focus:outline-none"
+              required
+              type="text"
+              placeholder="title..."
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+            />
+            <button className="bg-white text-black pl-3 pr-3" type="submit">
+              add
+            </button>
+          </div>
+
+          <input
+            className="border-gray-600 border-t-0 border-r-0 border-l-0 p-1 border focus:outline-none"
+            required
+            type="text"
+            placeholder="description..."
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+          />
+        </div>
       </form>
     </div>
   );
